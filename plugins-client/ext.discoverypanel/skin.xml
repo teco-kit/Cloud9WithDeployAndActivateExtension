@@ -1,0 +1,13 @@
+<a:skin xmlns:a="http://ajax.org/2005/aml" xmlns="http://www.w3.org/1999/xhtml">
+	<a:button name="mnubtn">
+	<a:style><![CDATA[
+.mnubtn.discovery_panel .icon {
+	background-image  : url(images/panel_icon.png);
+	background-repeat : no-repeat;
+	width			  : 100%;
+	height			  : 26px;
+	margin-left		  : 7px;
+}
+	]]></a:style>
+	</a:button>
+</a:skin>

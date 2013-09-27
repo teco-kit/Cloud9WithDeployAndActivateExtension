@@ -1,0 +1,16 @@
+{
+    "name": "cloud9.ide.discovery",
+    "version": "0.0.1",
+    "main": "./discovery.js",
+	  "dependencies" : {
+		  "restify" : ">=2.3.5",
+		  "utilities" : "git://github.com/tequnix/utilities.git"
+	  },
+	"private" : true,
+    "plugin": {
+        "consumes": [
+            "ide",
+			"dav"
+        ]
+    }
+}

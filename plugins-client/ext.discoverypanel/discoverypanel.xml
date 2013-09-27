@@ -1,0 +1,123 @@
+<a:application xmlns:a="http://ajax.org/2005/aml">
+
+    <a:window id="winDiscoveryPanel"
+      flex     = "1"
+      skin     = "fm-window"
+      title    = "Devices"
+      modal    = "false"
+      buttons  = "close"
+      optimize = "true"
+      minwidth = "75">
+
+		<a:button
+		  skin="header-btn"
+		  class="panel-settings"
+		  submenu="mnuDiscoveryPanelSettings"/>
+
+	  <a:menu 
+		  id="mnuDiscoveryPanelSettings"
+		  skin="menu"
+  	  >
+		  <a:checkbox 
+			  skin="checkbox-menu"
+			  id="hideSettings"
+			  values="true|false"
+			  checked="true"
+			  height="10"
+			  >Show requests</a:checkbox>
+	  </a:menu>
+
+	  <a:bar skin="basic"> 
+		  <a:bar id="runSettings" visible="{hideSettings.value}">
+				<a:vbox edge="5 9 5 8" validgroup="vgRunDbg">
+					<a:label class="size-11 arial bright-bg">Send request to selected clients</a:label>
+
+					<a:hbox height="36" align="center">
+						<a:label width="80" class="size-11 arial bright-bg">Apps: </a:label>
+						<a:dropdown 
+							id="appDropdown" 
+							multiselect = "false"
+							initial-message="Select app"
+							model = "{require('ext/discoverypanel/discoverypanel').appModel}"
+							each = "[app]"
+							caption = "[@name]"	
+							>
+						</a:dropdown>
+					</a:hbox>
+
+					<a:hbox height="36" align="center">
+						<a:label width="80" class="size-11 arial bright-bg">Request:</a:label>
+						<a:dropdown 
+							multiselect = "false"
+							id="requestDropdown" 
+							initial-message="Select request">
+							<a:item id="executionRequest">Execute main</a:item>
+							<!--
+							<a:item id="npmStart">npm start</a:item>
+							<a:item id="npmStop">npm stop</a:item>
+							-->
+						</a:dropdown>
+					</a:hbox>
+
+					<a:hbox height="36" align="center">
+						<a:label width="80" class="size-11 arial bright-bg">Cmd Line Args</a:label>
+						<a:textbox id="cmdArgs"
+						  skin     = "searchbox_textbox"
+						  flex     = "1"
+						  disabled = "false"
+						  initial-message = "Optional"/>
+					</a:hbox>
+
+					<a:hbox height="36" align="center">
+						<a:label width="80" class="size-11 arial bright-bg">Debug Mode</a:label>
+						<a:checkbox id="cbRunOnDbgDebugMode"
+						  label = ""
+						  skin  = "checkbox_black"
+						  disabled = "true"
+						  value = "" />
+					    <a:label width="20"></a:label>
+						<a:button
+						  id      = "btnRunOn"
+						  caption = "Send"
+						  width   = "60"
+						  skin    = "button-colorless"
+						  class   = "green dark"
+						  onclick = "{require('ext/discoverypanel/discoverypanel').sendRequest()}"
+						  align   = "right"
+						  />
+					</a:hbox>
+				</a:vbox>
+			<a:divider />
+			</a:bar>
+
+			<a:menu id="ctxMenuDevice">
+				<a:item>Device Option</a:item>
+			</a:menu>
+			<a:menu id="ctxMenuApp">
+				<a:item
+					onclick = "{require('ext/discoverypanel/discoverypanel').killApp()}"
+					>Kill</a:item>
+			</a:menu>
+
+			<a:bar>
+				<a:vbox align="left">
+					<a:label>Available Devices</a:label>
+					<a:tree 
+						id="treeDiscoveryPanel"
+						model="{require('ext/discoverypanel/discoverypanel').discoveryModel}"
+						multiselect="true"
+						scrollbar="sbShared 2 2 2">
+						<a:contextmenu menu="ctxMenuDevice" match="[@url]" />
+						<a:contextmenu menu="ctxMenuApp" match="[@name]" />
+						<a:each match="[device|app]">
+							<a:caption match="[@url]"  />
+							<a:caption match="[@name]" />
+							<!-- <a:icon match="[app]" value="" /> -->
+							<a:icon match="[device]" value="raspberry_pie.png" />
+						</a:each>
+					</a:tree>	
+				</a:vbox>
+			</a:bar>
+		</a:bar>
+    </a:window>
+</a:application>

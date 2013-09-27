@@ -1,0 +1,14 @@
+{
+    "name": "ext.discoverypanel",
+    "version": "0.0.1",
+    "main": "discoverypanel.js",
+    "private": true,
+    "plugin": {
+        "provides": [
+            "ext.discoverypanel"
+        ],
+        "consumes": [
+            "client-plugins"
+        ]
+    }
+}

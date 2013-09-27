@@ -42,7 +42,10 @@
         "ace":          "https://github.com/ajaxorg/ace/tarball/cacd51e2fe911971428dd40d9b09ba3c913a7ed5",
         "asyncjs":      "https://github.com/ajaxorg/async.js/tarball/bd936c60bb87c58052bcc0307f4e637bd35c908f",
         "v8debug":      "https://github.com/ajaxorg/lib-v8debug/tarball/d2fac9b09724cb2e75e2807191eace9bc27d3b52",
-        "treehugger":   "https://github.com/ajaxorg/treehugger/tarball/c6fb8e8c7ad7654577e1f843559fb91e925a3b79"
+        "treehugger":   "https://github.com/ajaxorg/treehugger/tarball/c6fb8e8c7ad7654577e1f843559fb91e925a3b79",
+
+		"utilities": "git://github.com/tequnix/utilities.git",
+	    "restify" : ">=2.3.5"
     },
 
     "devDependencies": {
@@ -60,7 +63,7 @@
     }],
 
     "scripts": {
-        "start": "sh ./bin/cloud9.sh",
+        "start": "sh ./bin/cloud9.sh custom -w apps",
         "build-debug": "node ./scripts/build-debug",
         "build-packed": "node ./scripts/build-packed",
         "postinstall": "make ace"
