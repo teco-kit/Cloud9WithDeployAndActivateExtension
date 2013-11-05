@@ -1,1 +1,4 @@
-console.log("Test succeeded!");
+console.log("Start!");
+setTimeout(function () {
+    console.log("End!");
+}, 2800);

@@ -243,6 +243,7 @@ util.inherits(DiscoveryPlugin, Plugin);
 								data_handler(url, app, pid, client, chunk);
 							});
 							res.on("end", function () {
+								update_devices_model();
 								//exit_handler(url, app, false, client);
 							});
 						}
