@@ -6,7 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "dependencies" : {
+    "pi-gpio" : ">=0.0.2"
+  },
   "author": "Daniel",
-  "rule" : "var projector=http://localhost:7777/projector, lamp=http://localhost:7777/lamp; lamp.on && projector.on && -> 10 (cateye_3c && projector.temp > 30)",
+  "rule" : "var projector=http://localhost:7777/projector, lamp=http://localhost:7777/lamp; cateye_3c && lamp.on && -> 10 (projector.temp > 30)",
   "license": "BSD-2-Clause"
 }
