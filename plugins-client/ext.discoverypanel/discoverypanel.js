@@ -72,7 +72,7 @@ define(function (require, exports, module) {
 
 			ide.addEventListener("socketMessage", function (e) {
 				var msg = e.message;
-			    console.log("Got msg: %j", e.message);
+			    //console.log("Got msg: %j", e.message);
 				if (msg.id === 3) {
 					if (msg.subId === 0) {
 						discoveryModel.load(msg.model);
@@ -86,7 +86,7 @@ define(function (require, exports, module) {
 							msg.app + ":" + msg.pid + "@" + msg.device);
 						apf.setStyleClass(stream.$ext, "loaded");
 					}
-					//c9console.show();
+					c9console.show();
 					//c9console.showOutput();
 					c9console.write(msg.data, {tracer_id: msg.pid});
 					/*
