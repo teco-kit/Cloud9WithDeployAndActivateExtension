@@ -1,0 +1,20 @@
+{
+  "name": "irwrapper",
+  "version": "0.0.1",
+  "description": "A small application, that sends IR signals to the logitag service",
+  "main": "server.js",
+  "bin": {
+	  "irwrapper": "server.js"
+  },
+  "scripts": {
+    "start": "./server.js"
+  },
+  "dependencies" : {
+	"restify" : ">=2.3.5",
+	"utilities" : "git://github.com/tequnix/utilities.git",
+	"berry" : "git://github.com/tequnix/berry.git"
+  },
+  "repository": "",
+  "author": "Daniel",
+  "license": "BSD"
+}
