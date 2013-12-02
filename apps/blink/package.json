@@ -1,0 +1,16 @@
+{
+  "name": "blink",
+  "version": "0.0.1",
+  "description": "A small led-blinking app",
+  "main": "blink.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start" : "./blink.js"
+  },
+  "dependencies" : {
+    "pi-gpio" : ">=0.0.2"
+  },
+  "author": "Daniel",
+  "rule" : "cateye_3c",
+  "license": "BSD-2-Clause"
+}

@@ -15,7 +15,6 @@ gpio.open(18, "output", function(err) {
 });
 
 process.on("SIGTERM", function ()  {
-        console.log("End!");
         clearInterval(intvl);
         gpio.write(18, 0, function () {
             gpio.close(18);
