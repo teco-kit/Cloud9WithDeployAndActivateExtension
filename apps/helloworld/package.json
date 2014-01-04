@@ -5,6 +5,7 @@
   "main": "hello.js",
   "scripts": {
     "start": "node hello.js",
+    "debug": "node --debug-brk hello.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

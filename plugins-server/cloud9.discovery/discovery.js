@@ -148,7 +148,7 @@ util.inherits(DiscoveryPlugin, Plugin);
 			var jsonClient = restify.createJsonClient({
 				url: url
 			});
-			if (subId === 1) {
+			if (subId === 1 || subId === 2) {
 				var apps = app_index.getAppsByName(app_name);
 				// TODO: npm requires app names to be unique! 
 				// -> makes no sense to install two apps with 
@@ -159,20 +159,21 @@ util.inherits(DiscoveryPlugin, Plugin);
 					// for small apps.
 					npm_util.pack(apps[0].dir, 
 							self.handler.pack(url, apps[0], function (err) {
-									if (!err) {
-										jsonClient.post("/apps/" + apps[0].name + "/run",
-											function (err, req, res, obj) {
-												if (err) {
-													self.handler.error(url, app_name, null, client, err);
-												} else {
-													httpClient.get(obj.created.path, 
-														self.handler.http_req(url, app_name, obj.created.pid, client));
-													update_devices_model();
-												}
-											});
-									} else {
-										console.log(err);
-									}
+								var cmd = (subId === 1) ? "/run" : "/debug";
+								if (!err) {
+									jsonClient.post("/apps/" + apps[0].name + cmd,
+										function (err, req, res, obj) {
+											if (err) {
+												self.handler.error(url, app_name, null, client, err);
+											} else {
+												httpClient.get(obj.created.path, 
+													self.handler.http_req(url, app_name, obj.created.pid, client));
+												update_devices_model();
+											}
+										});
+								} else {
+									console.log(err);
+								}
 					}));
 				} else {
 					console.log("No such app: %j", app_name);

@@ -171,17 +171,24 @@ define(function (require, exports, module) {
 			*/
 			if (app.length === 1 && request.length === 1) {
 				msg.app = app[0].attributes.getNamedItem("name").value;
-				if (request[0].id === "stopExecutionRequest") {
+				if (request[0].id === "killRequest") {
 					msg.subId = 3;
 					msg.pid = Number(cmdArgs.getValue());
-				} else if (request[0].id === "executionRequest") {
+				} else if (request[0].id === "npmStartRequest") {
 					msg.subId = 1;
 					if (cmdArgs.getValue() === "") {
 						msg.args = [];
 					} else {
 						msg.args = cmdArgs.getValue().split(" "); 
 					}
-				} else {
+				} else if (request[0].id === "npmDebugRequest") {
+					msg.subId = 2;
+					if (cmdArgs.getValue() === "") {
+						msg.args = [];
+					} else {
+						msg.args = cmdArgs.getValue().split(" "); 
+					}
+
 				}
 				msg.clients = [];
 				msg.sender ="discoverypanel";

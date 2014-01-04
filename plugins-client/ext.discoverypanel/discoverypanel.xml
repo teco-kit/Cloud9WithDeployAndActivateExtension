@@ -51,11 +51,9 @@
 							multiselect = "false"
 							id="requestDropdown" 
 							initial-message="Select request">
-							<a:item id="executionRequest">Execute main</a:item>
-							<!--
-							<a:item id="npmStart">npm start</a:item>
-							<a:item id="npmStop">npm stop</a:item>
-							-->
+							<a:item id="npmStartRequest">npm start</a:item>
+							<a:item id="npmDebugRequest">npm debug</a:item>
+							<!-- <a:item id="killRequest">kill</a:item> -->
 						</a:dropdown>
 					</a:hbox>
 
