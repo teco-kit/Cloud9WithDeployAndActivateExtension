@@ -157,7 +157,20 @@ define(function (require, exports, module) {
 		},
 
 		openDebugger : function () {
-			window.open("http://localhost:3131");
+			var selection = treeDiscoveryPanel.getSelection(),
+				url,
+				dbg_url;
+			if (typeof selection !== "undefined") {
+				//Take first item only
+				url = selection[selection.length - 1].parentNode.attributes.getNamedItem("url").value;
+				if (typeof url !== "undefined")  {
+					console.log(url);
+					dbg_url = url.split("\:");
+					dbg_url[dbg_url.length - 1] = "8080/debug?port=5858";
+					dbg_url = dbg_url.join(":");
+					window.open(dbg_url);
+				}
+			}
 		},
 
 		sendRequest: function () {
