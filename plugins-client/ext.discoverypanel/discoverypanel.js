@@ -156,6 +156,10 @@ define(function (require, exports, module) {
 			}
 		},
 
+		openDebugger : function () {
+			window.open("http://localhost:3131");
+		},
+
 		sendRequest: function () {
 			var msg = {id: 4},
 				selection = treeDiscoveryPanel.getSelection(),
@@ -176,19 +180,14 @@ define(function (require, exports, module) {
 					msg.pid = Number(cmdArgs.getValue());
 				} else if (request[0].id === "npmStartRequest") {
 					msg.subId = 1;
+                    if (cbDebugMode.getValue() === true) {
+                        msg.subId = 2;
+                    }
 					if (cmdArgs.getValue() === "") {
 						msg.args = [];
 					} else {
 						msg.args = cmdArgs.getValue().split(" "); 
 					}
-				} else if (request[0].id === "npmDebugRequest") {
-					msg.subId = 2;
-					if (cmdArgs.getValue() === "") {
-						msg.args = [];
-					} else {
-						msg.args = cmdArgs.getValue().split(" "); 
-					}
-
 				}
 				msg.clients = [];
 				msg.sender ="discoverypanel";

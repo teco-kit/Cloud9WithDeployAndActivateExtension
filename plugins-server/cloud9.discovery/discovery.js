@@ -114,15 +114,11 @@ util.inherits(DiscoveryPlugin, Plugin);
 						model = "<data>";
 						console.log(devices);
 						devices.forEach(function (device) {
-							model += "<device url=\"" + device.url + "\">"; 
-							//if (device.running.length > 0) {
-								//model += "<running name=\"running\">";
+							model += "<device url=\"" + device.url + "\">";
 								device.running.forEach(function (app) {
 									model += "<app name=\"" + app.name + "\" pid=\"" + 
-										app.pid + "\" />";
+										app.pid + "\" debug=\"" + app.debug + "\" />";
 								});
-								//model += "</running>";
-							//}
 							model += "</device>";
 						});
 						model += "</data>";
