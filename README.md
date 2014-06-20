@@ -30,6 +30,10 @@ root directory with:
      npm start
 
 
+For the remote-debugging feature to work, 
+[node-inspector](https://github.com/node-inspector/node-inspector) must be installed
+and run on the same machine as [berry](https://github.com/tequnix/berry).
+
 # Cloud9 IDE
 
 Cloud9 is an open source IDE built with [Node.JS] on the back-end and JavaScript/HTML5 on the client.
