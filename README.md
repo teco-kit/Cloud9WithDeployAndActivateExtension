@@ -1,7 +1,32 @@
-**Issues on c9.io** If you have questions regarding the hosted service at [c9.io](http://c9.io)
-including issues with accounts or payments,
-please file them at [support.c9.io](http://support.cloud9ide.com/home) rather than as a
-GitHub issue in this repository.
+### Cloud9WithDeployAndActivateExtension
+
+This is a modified version of the cloud9 IDE.
+This version includes a discovery panel that lets the user see available 
+[berry](https://github.com/tequnix/berry) 
+services in the network. All nodejs apps with a packge.json are listed
+in the panel and can be run on all discovered berry services.
+
+For the web services and cloud9 to work, nodejs must be installed. A
+recent version (v0.10.x or later) is recommended. See the [website](nodejs.org)
+for more details. The node package manager (npm) is also required (it is
+usually automatically installed with nodejs). Some modules build native
+parts, so a compiler toolchain is necessary. For a modern ubuntu system
+that would mean installing the following packages:
+
+     sudo apt-get install nodejs nodejs-legacy npm build-essential
+
+With the following three steps cloud9 can be installed from the command
+line:
+
+     git clone https://github.com/teco-kit/Cloud9WithDeployAndActivateExtension.git
+     cd ./Cloud9WithDeployAndActivateExtension
+     npm install
+
+Everything should be set up now. The IDE can be started from the cloud9
+root directory with:
+
+     npm start
+
 
 # Cloud9 IDE
 
