@@ -2,7 +2,7 @@
  * Discovery Module for the Cloud9 IDE
  *
  */
-"use strict"; 
+"use strict";
 
 var util = require("util"),
 	utilities = require("utilities"),
@@ -13,6 +13,8 @@ var util = require("util"),
 	restify = require("restify"),
 	fs = require("fs"),
 	path = require("path"),
+	dns = require("dns"),
+	url = require("url"),
 	Plugin = require("../cloud9.core/plugin"),
 	DAV;
 
@@ -41,20 +43,27 @@ util.inherits(DiscoveryPlugin, Plugin);
 (function() {
 	var update_apps_model,
 		update_devices_model,
+		check_if_alive,
 		HandlerCollection;
 
 	this.init = function () {
 		var self = this;
 		self.clients = {};
 		this.handler = new HandlerCollection();
-		
+
 		discovery.createBrowser("http");
 		discovery.on("up", function (service) {
 			//console.log("up %j", service);
 			if (service.name === "berry") {
-				self.clients[service.url] = true;
-				update_devices_model();
-			} 
+				dns.reverse(url.parse(service.url).hostname, function (err, domains) {
+					if(!err && util.isArray(domains) && domains.length > 0) {
+						self.clients[service.url] = domains[0];
+					} else {
+						self.clients[service.url] = true;
+					}
+					update_devices_model();
+				});
+			}
 			//console.log(self.clients);
 		});
 		discovery.on("down", function (service) {
@@ -68,7 +77,7 @@ util.inherits(DiscoveryPlugin, Plugin);
 		discovery.startBrowsing();
 
 		update_apps_model = function () {
-			var apps, 
+			var apps,
 				model = "<data>",
 				msg = {id: 3, subId: 1};
 			self.updateApps();
@@ -78,8 +87,20 @@ util.inherits(DiscoveryPlugin, Plugin);
 			});
 			model += "</data>";
 			msg.model = model;
-			console.log("Updated model: %j", model);
+			//console.log("Updated model: %j", model);
 			self.ide.broadcast(JSON.stringify(msg), self.name);
+		};
+
+		check_if_alive = function (device) {
+			var jsonClient = restify.createJsonClient({url: device.url});
+			jsonClient.get("/apps", function (err) {
+				if (err) {
+					setTimeout(function () {
+						delete self.clients[device.url];
+						update_devices_model();
+					}, 1000);
+				}
+			});
 		};
 
 		update_devices_model = function () {
@@ -94,6 +115,8 @@ util.inherits(DiscoveryPlugin, Plugin);
 				return function (err, req, res, obj) {
 						if (!err) {
 							device.running = obj;
+						} else {
+							device.running = false;
 						}
 						checked++;
 				};
@@ -101,6 +124,9 @@ util.inherits(DiscoveryPlugin, Plugin);
 			for (var url in self.clients) {
 				if (self.clients.hasOwnProperty(url)) {
 					var device = {url: url, running: []};
+					if (typeof self.clients[url] !== 'boolean') {
+						device.domain = self.clients[url];
+					}
 					devices.push(device);
 					jsonClient = restify.createJsonClient({url: url});
 					jsonClient.get("/running", check_running(device));
@@ -112,22 +138,30 @@ util.inherits(DiscoveryPlugin, Plugin);
 					if (checked === devices.length) {
 						clearInterval(interval);
 						model = "<data>";
-						console.log(devices);
+						//console.log(devices);
 						devices.forEach(function (device) {
-							model += "<device url=\"" + device.url + "\">";
+							model += "<device ";
+							if (typeof device.domain !== "undefined") {
+								model += " domain=\"" + device.domain + "\"";
+							}
+							model += " url=\"" + device.url + "\" >";
+							if (device.running === false) {
+								check_if_alive(device);
+							} else {
 								device.running.forEach(function (app) {
-									model += "<app name=\"" + app.name + "\" pid=\"" + 
-										app.pid + "\" debug=\"" + app.debug + "\" />";
+									model += "<app name=\"" + app.name + "\" pid=\"" +
+									app.pid + "\" debug=\"" + app.debug + "\" />";
 								});
+							}
 							model += "</device>";
 						});
 						model += "</data>";
 						msg = {id: 3, subId: 0, model: model};
 						self.ide.broadcast(JSON.stringify(msg), self.name);
-						console.log("Updated model: %j", model);
+						//console.log("Updated model: %j", model);
 					}
-				}, 250);
-			})();
+			}, 250);
+		})();
 		};
 	};
 
@@ -146,14 +180,14 @@ util.inherits(DiscoveryPlugin, Plugin);
 			});
 			if (subId === 1 || subId === 2) {
 				var apps = app_index.getAppsByName(app_name);
-				// TODO: npm requires app names to be unique! 
-				// -> makes no sense to install two apps with 
-				// the same name, because the first app will 
+				// TODO: npm requires app names to be unique!
+				// -> makes no sense to install two apps with
+				// the same name, because the first app will
 				// be overriden by the second one!
 				if (util.isArray(apps) && apps.length > 0) {
 					// TODO: npm pack takes several seconds, even
 					// for small apps.
-					npm_util.pack(apps[0].dir, 
+					npm_util.pack(apps[0].dir,
 							self.handler.pack(url, apps[0], function (err) {
 								var cmd = (subId === 1) ? "/run" : "/debug";
 								if (!err) {
@@ -162,12 +196,13 @@ util.inherits(DiscoveryPlugin, Plugin);
 											if (err) {
 												self.handler.error(url, app_name, null, client, err);
 											} else {
-												httpClient.get(obj.created.path, 
+												httpClient.get(obj.created.path,
 													self.handler.http_req(url, app_name, obj.created.pid, client));
 												update_devices_model();
 											}
 										});
 								} else {
+									check_if_alive({url: url});
 									console.log(err);
 								}
 					}));
@@ -182,8 +217,9 @@ util.inherits(DiscoveryPlugin, Plugin);
 							update_devices_model();
 						} else {
 							console.log(err);
+							check_if_alive({url: url});
 						}
-					}); 
+					});
 				}
 			}
 		};
@@ -193,7 +229,7 @@ util.inherits(DiscoveryPlugin, Plugin);
 				device_handler(device.url, message.subId, message.app, message.pid);
 			});
 		} else if (message.id === 5 && message.subId === 1) {
-			console.log("Update message!");
+			//console.log("Update message!");
 			// Update Request
 			update_apps_model();
 			update_devices_model();
@@ -215,6 +251,7 @@ util.inherits(DiscoveryPlugin, Plugin);
 				app: app_name, device: url, error: err};
 			console.log("Error! %j", err);
 			client.send(JSON.stringify(msg, self.name));
+			check_if_alive({url: url});
 		};
 		this.data = data_handler = function (url, app_name, pid, client, data) {
 			var msg = {id: 4, subId: 2, pid: pid};
@@ -230,6 +267,7 @@ util.inherits(DiscoveryPlugin, Plugin);
 		this.http_req = http_req_handler = function (url, app, pid, client) {
 			return function (err, req) {
 				if (err) {
+
 					error_handler(url, app, pid, client, err);
 				} else {
 					req.on("result", function (err, res) {
@@ -259,7 +297,7 @@ util.inherits(DiscoveryPlugin, Plugin);
 		};
 		this.pack = pack_handler = function (url, app, cb) {
 			return function (err) {
-				var pkg_path = path.resolve(process.cwd(), 
+				var pkg_path = path.resolve(process.cwd(),
 						app.name + "-" + app.version + ".tgz");
 				if(!isErr(err, cb)) {
 					pkg_transfer.upload(url, pkg_path, function (err) {
@@ -269,7 +307,7 @@ util.inherits(DiscoveryPlugin, Plugin);
 							}
 							fs.unlink(pkg_path);
 						}
-					});	
+					});
 				}
 			};
 		};

@@ -7,7 +7,7 @@ define(function (require, exports, module) {
 	var panels = require("ext/panels/panels");
 	var c9console = require("ext/console/console");
 	var markup = require("text!ext/discoverypanel/discoverypanel.xml");
-	var commands = require("ext/commands/commands");  
+	var commands = require("ext/commands/commands");
 	//var editors = require("ext/editors/editors");
 	var menus = require("ext/menus/menus");
 	var skin = require("text!ext/discoverypanel/skin.xml");
@@ -20,31 +20,18 @@ define(function (require, exports, module) {
 		markup			: markup,
 		nodes			: [],
 		defaultWidth    : 150,
-		skin :  { 
+		skin :  {
 			id : "discoverypanel",
 			data : skin,
 			"media-path" : ide.staticPrefix + "/ext/discoverypanel/images/",
 			"icon-path" : ide.staticPrefix + "/ext/discoverypanel/images/"
 		},
 		hook : function () {
-			
+
 			var _self = this;
-			
+
 			this.markupInsertionPoint = colLeft;
-
-			/*
-			var discoveryModel = this.discoveryModel = new apf.model({
-						htmlNode 	: document.body,
-						id 			: "discoveryModel",
-						data		: ""
-			});
-			var appModel = this.appModel =  new apf.model({
-					htmlNode : document.body,
-					id 		 : "appModel",
-					data	 : ""
-			});
-			*/
-
+			
 			panels.register(this, {
 				position : 7000,
 				caption  : "Discovery",
@@ -80,9 +67,9 @@ define(function (require, exports, module) {
 						appModel.load(msg.model);
 					}
 				} else if (msg.id === 4 && msg.subId === 2)  {
-					var stream = c9console.getLogStreamOutObject(Number(msg.pid)); 
+					var stream = c9console.getLogStreamOutObject(Number(msg.pid));
 					if (!stream.$ext) {
-						stream = c9console.getLogStreamOutObject(msg.pid, null, 
+						stream = c9console.getLogStreamOutObject(msg.pid, null,
 							msg.app + ":" + msg.pid + "@" + msg.device);
 						apf.setStyleClass(stream.$ext, "loaded");
 					}
@@ -90,7 +77,7 @@ define(function (require, exports, module) {
 					//c9console.showOutput();
 					c9console.write(msg.data, {tracer_id: msg.pid});
 					/*
-					txtOutput.addValue(msg.app + ":" + msg.pid + "@" + 
+					txtOutput.addValue(msg.app + ":" + msg.pid + "@" +
 						msg.device+ ": ");
 					txtOutput.addValue(msg.data);
 					txtOutput.addValue("<br />");
@@ -176,31 +163,17 @@ define(function (require, exports, module) {
 		sendRequest: function () {
 			var msg = {id: 4},
 				selection = treeDiscoveryPanel.getSelection(),
-				app,
-				request;
-			app = appDropdown.getSelection();
-			request = requestDropdown.getSelection();
-			/*
-			while (selection.nodeName !== "device") {
-				selection = selection.parentNode
-			};
-			console.log(selection);
-			*/
-			if (app.length === 1 && request.length === 1) {
+				app = appDropdown.getSelection();
+			if (app.length === 1) {
 				msg.app = app[0].attributes.getNamedItem("name").value;
-				if (request[0].id === "killRequest") {
-					msg.subId = 3;
-					msg.pid = Number(cmdArgs.getValue());
-				} else if (request[0].id === "npmStartRequest") {
-					msg.subId = 1;
-                    if (cbDebugMode.getValue() === true) {
-                        msg.subId = 2;
-                    }
-					if (cmdArgs.getValue() === "") {
-						msg.args = [];
-					} else {
-						msg.args = cmdArgs.getValue().split(" "); 
-					}
+				msg.subId = 1;
+        if (cbDebugMode.getValue() === true) {
+            msg.subId = 2;
+        }
+				if (cmdArgs.getValue() === "") {
+					msg.args = [];
+				} else {
+					msg.args = cmdArgs.getValue().split(" ");
 				}
 				msg.clients = [];
 				msg.sender ="discoverypanel";
@@ -215,7 +188,6 @@ define(function (require, exports, module) {
 				if (msg.clients.length > 0) {
 					ide.send(msg);
 				}
-			} else {
 			}
 		},
 
@@ -249,7 +221,7 @@ define(function (require, exports, module) {
 				item.destroy(true, true);
 			});
 			this.nodes = [];
-			
+
 			panels.unregister(this);
 		}
 	});

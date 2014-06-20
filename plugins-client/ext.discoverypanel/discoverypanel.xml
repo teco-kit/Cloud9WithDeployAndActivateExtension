@@ -14,45 +14,34 @@
 		  class="panel-settings"
 		  submenu="mnuDiscoveryPanelSettings"/>
 
-	  <a:menu 
+	  <a:menu
 		  id="mnuDiscoveryPanelSettings"
 		  skin="menu"
   	  >
-		  <a:checkbox 
+		  <a:checkbox
 			  skin="checkbox-menu"
 			  id="hideSettings"
 			  values="true|false"
 			  checked="true"
 			  height="10"
-			  >Show requests</a:checkbox>
+			  >Show</a:checkbox>
 	  </a:menu>
 
-	  <a:bar skin="basic"> 
+	  <a:bar skin="basic">
 		  <a:bar id="runSettings" visible="{hideSettings.value}">
 				<a:vbox edge="5 9 5 8" validgroup="vgRunDbg">
 					<a:label class="size-11 arial bright-bg">Send request to selected clients</a:label>
 
 					<a:hbox height="36" align="center">
 						<a:label width="80" class="size-11 arial bright-bg">Apps: </a:label>
-						<a:dropdown 
-							id="appDropdown" 
+						<a:dropdown
+							id="appDropdown"
 							multiselect = "false"
 							initial-message="Select app"
 							model = "{require('ext/discoverypanel/discoverypanel').appModel}"
 							each = "[app]"
-							caption = "[@name]"	
+							caption = "[@name]"
 							>
-						</a:dropdown>
-					</a:hbox>
-
-					<a:hbox height="36" align="center">
-						<a:label width="80" class="size-11 arial bright-bg">Request:</a:label>
-						<a:dropdown 
-							multiselect = "false"
-							id="requestDropdown" 
-							initial-message="Select request">
-							<a:item id="npmStartRequest">run</a:item>
-							<!-- <a:item id="killRequest">kill</a:item> -->
 						</a:dropdown>
 					</a:hbox>
 
@@ -76,7 +65,7 @@
 					    <a:label width="20"></a:label>
 						<a:button
 						  id      = "btnRunOn"
-						  caption = "Send"
+						  caption = "Run"
 						  width   = "60"
 						  skin    = "button-colorless"
 						  class   = "green dark"
@@ -103,7 +92,7 @@
 			<a:bar>
 				<a:vbox align="left">
 					<a:label>Available Devices</a:label>
-					<a:tree 
+					<a:tree
 						id="treeDiscoveryPanel"
 						model="{require('ext/discoverypanel/discoverypanel').discoveryModel}"
 						multiselect="true"
@@ -111,15 +100,16 @@
 						<a:contextmenu menu="ctxMenuDevice" match="[@url]" />
 						<a:contextmenu menu="ctxMenuApp" match="[@name]" />
 						<a:each match="[device|app|debug]">
-							<a:caption match="[@url]"  />
+							<a:item match="[@url]"  />
+              <a:caption match="[@domain]" />
 							<a:caption match="[@name]" />
-                            <a:icon match="[device]" value="raspberry_pie.png" />
-							<a:icon 
-								match="[app]" 
-								value="{[@debug] == 'true' ? 'debugger/ldebug_obj.png' : 'debugger/run_tool.png'}" 
+              <a:icon match="[device]" value="raspberry_pie.png" />
+							<a:icon
+								match="[app]"
+								value="{[@debug] == 'true' ? 'debugger/ldebug_obj.png' : 'debugger/run_tool.png'}"
 							/>
 						</a:each>
-					</a:tree>	
+					</a:tree>
 				</a:vbox>
 			</a:bar>
 		</a:bar>
