@@ -10,10 +10,12 @@ For the web services and cloud9 to work, nodejs must be installed. A
 recent version (v0.10.x or later) is recommended. See the [website](nodejs.org)
 for more details. The node package manager (npm) is also required (it is
 usually automatically installed with nodejs). Some modules build native
-parts, so a compiler toolchain is necessary. For a modern ubuntu system
+parts, so a compiler toolchain is necessary. Since 
+[mdns](https://github.com/agnat/node_mdns) is used for service discovery,
+their dependencies must be met as well. For a modern ubuntu system
 that would mean installing the following packages:
 
-     sudo apt-get install nodejs nodejs-legacy npm build-essential
+     sudo apt-get install nodejs nodejs-legacy npm build-essential libavahi-compat-libdnssd-dev
 
 With the following three steps cloud9 can be installed from the command
 line:
